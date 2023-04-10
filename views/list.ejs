@@ -5,7 +5,11 @@
     <title>ToDo list</title>
 </head>
 <body>
-    <h1>Today is <%=userDate%> which means it is a <%=weekDate%>.</h1>
+    <% if( userDate ==="Saturday" || userDate === "Sunday" ) { %>
+    <h1 style="color: purple">It is a <%=weekDate%>, <%=userDate%>'s ToDo list</h1>
+    <% } else { %>
+        <h1 style="color: blue">It is a <%=weekDate%>, <%=userDate%>'s ToDo list</h1>
+    <% } %>
     <p></p>
 </body>
 </html>
