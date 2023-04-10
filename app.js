@@ -6,14 +6,9 @@ const app = express();
 // this is commonly used when accessing css files. 
 //app.use(express.static('public'));
 
-// This is required to use the bodyParser for HTML sites
 app.use(bodyParser.urlencoded({ extended: true }));
 
-/*Express reminder if you are wanting to add multiple lines or
-changes when you have a res.send(), make sure you use
-res.write() as many times as you need, as you can only have 
-on res.send()*/
-
+app.set('view engine','ejs');
 
 app.get("/", function(req,res){
     
