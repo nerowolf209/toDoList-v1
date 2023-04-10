@@ -21,22 +21,34 @@ app.get("/", function(req,res){
     } else {
         weekDate = "weekday";
     }
-    
-    if (currentDay === 0 ){
-        text = "Sunday";
-    }else if(currentDay=== 1 ){
-        text = "Monday";
-    }else if(currentDay=== 2 ){
-        text = "Tuesday";
-    }else if(currentDay=== 3 ){
-        text = "Wednesday";
-    }else if(currentDay=== 4 ){
-        text = "Thursday";
-    }else if(currentDay=== 5 ){
-        text = "Friday";
-    }else if(currentDay=== 6 ){
-        text = "Saturday";
+
+    switch (currentDay) {
+        case 0:
+            text = "Sunday";
+            break;
+        case 1:
+            text = "Monday";
+            break;
+        case 2:
+            text = "Tuesday";
+            break;
+        case 3:
+            text = "Wednesday";
+            break;
+        case 4:
+            text = "Thursday";
+            break;
+        case 5:
+            text = "Friday";
+            break;
+        case 6:
+            text = "Saturday";
+            break;
+        default:
+            console.log("Error: currentDay is equal to: " + currentDay);
+            break;
     }
+
     res.render('list',{weekDate:weekDate,userDate:text});
 
 });
