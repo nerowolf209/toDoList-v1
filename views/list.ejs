@@ -3,18 +3,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ToDo list</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+    <div class="box" id="heading">
+        <h1><%= weekDate %></h1>
+    </div>
+    
+    <div class="box">
+        <% if (list.length >= 1) { %>
+            <% for(var i=0; i<list.length; i++) {%>
+                <div class="item">
+                    <input type="checkbox"><p><%= list[i]%></p>
+                </div>
+            <% } %>
+        <% } %>
 
-    <h1><%= weekDate %></h1>
-    <% for(var i=0; i<list.length; i++) {%>
-        <ul>
-            <input type="checkbox"><%= list[i]%>
-        </ul>
-     <% } %>
-    <form action="/" method="post">
-        <input type="text" name="addList" id="">
-        <button type="submit">Add</button>
-    </form>
+        <form class="item" action="/" method="post">
+            <input autocomplete="off" type="text" name="addList" id="" placeholder="New Item">
+            <button type="submit">+</button>
+        </form>
+    </div>
+    
 </body>
 </html>

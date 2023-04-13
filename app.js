@@ -3,16 +3,15 @@ const bodyParser = require("body-parser");
 
 const app = express();
 
-// this is commonly used when accessing css files. 
-//app.use(express.static('public'));
-
 app.use(bodyParser.urlencoded({ extended: true }));
+//this is commonly used when accessing css files. 
+app.use(express.static('public'));
 
 app.set('view engine','ejs');
 
-var addList = []
+let addList = []
 
-var today = new Date();
+let today = new Date();
 
 const localLang = 'en-US'
 const options = {
@@ -20,7 +19,7 @@ const options = {
     month: 'long',
     day: 'numeric'
 }
-var currentDay = today.toLocaleDateString(localLang,options);
+let currentDay = today.toLocaleDateString(localLang,options);
 
 app.get("/", function(req,res){
 
