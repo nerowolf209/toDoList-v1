@@ -5,11 +5,16 @@
     <title>ToDo list</title>
 </head>
 <body>
-    <% if( userDate ==="Saturday" || userDate === "Sunday" ) { %>
-    <h1 style="color: purple">It is a <%=weekDate%>, <%=userDate%>'s ToDo list</h1>
-    <% } else { %>
-        <h1 style="color: blue">It is a <%=weekDate%>, <%=userDate%>'s ToDo list</h1>
-    <% } %>
-    <p></p>
+
+    <h1><%= weekDate %></h1>
+    <% for(var i=0; i<list.length; i++) {%>
+        <ul>
+            <input type="checkbox"><%= list[i]%>
+        </ul>
+     <% } %>
+    <form action="/" method="post">
+        <input type="text" name="addList" id="">
+        <button type="submit">Add</button>
+    </form>
 </body>
 </html>

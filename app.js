@@ -10,49 +10,28 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('view engine','ejs');
 
+var addList = []
+
+var today = new Date();
+
+const localLang = 'en-US'
+const options = {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric'
+}
+var currentDay = today.toLocaleDateString(localLang,options);
+
 app.get("/", function(req,res){
-    
-    var today = new Date();
-    var currentDay = today.getDay()
-    var weekDate = ""
-    var text = "";
-    if (currentDay === 0 || currentDay === 6){
-        weekDate = "weekend";
-    } else {
-        weekDate = "weekday";
-    }
 
-    switch (currentDay) {
-        case 0:
-            text = "Sunday";
-            break;
-        case 1:
-            text = "Monday";
-            break;
-        case 2:
-            text = "Tuesday";
-            break;
-        case 3:
-            text = "Wednesday";
-            break;
-        case 4:
-            text = "Thursday";
-            break;
-        case 5:
-            text = "Friday";
-            break;
-        case 6:
-            text = "Saturday";
-            break;
-        default:
-            console.log("Error: currentDay is equal to: " + currentDay);
-            break;
-    }
-
-    res.render('list',{weekDate:weekDate,userDate:text});
+    res.render('list',{weekDate:currentDay,list:addList});
 
 });
 
+app.post("/", function(req, res){
+    addList.push(req.body.addList);
+    res.redirect("/")
+});
 
 app.listen(3000, function(){
     console.log("Server is running.");
