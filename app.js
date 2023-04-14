@@ -9,7 +9,8 @@ app.use(express.static('public'));
 
 app.set('view engine','ejs');
 
-let addList = []
+let addList = [];
+let workList = [];
 
 let today = new Date();
 
@@ -23,14 +24,31 @@ let currentDay = today.toLocaleDateString(localLang,options);
 
 app.get("/", function(req,res){
 
-    res.render('list',{weekDate:currentDay,list:addList});
+    res.render('list',{listTitle:currentDay,list:addList});
 
+});
+
+app.get("/work",function(req,res){
+
+    res.render('list',{listTitle:"Work List",list:workList});
+});
+
+app.get("/about",function(req,res){
+
+    res.render('about');
 });
 
 app.post("/", function(req, res){
-    addList.push(req.body.addList);
-    res.redirect("/")
+        addList.push(req.body.toDoList);
+        res.redirect("/");
+
 });
+
+app.post("/work", function(req, res){
+    workList.push(req.body.toDoList);
+    res.redirect("/work");
+});
+
 
 app.listen(3000, function(){
     console.log("Server is running.");

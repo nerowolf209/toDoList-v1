@@ -1,13 +1,8 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ToDo list</title>
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
+
+<%- include("header") -%>    
+
     <div class="box" id="heading">
-        <h1><%= weekDate %></h1>
+        <h1><%= listTitle %></h1>
     </div>
     
     <div class="box">
@@ -19,11 +14,10 @@
             <% } %>
         <% } %>
 
-        <form class="item" action="/" method="post">
-            <input autocomplete="off" type="text" name="addList" id="" placeholder="New Item">
-            <button type="submit">+</button>
+        <form class="item" action="" method="post">
+            <input autocomplete="off" type="text" name="toDoList" id="" placeholder="New Item">
+            <button type="submit" name="list" value= <%= listTitle %>>+</button>
         </form>
     </div>
-    
-</body>
-</html>
+
+<%- include("footer") -%>    
