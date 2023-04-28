@@ -36,21 +36,19 @@ async function createEntry(itemName,submitListName){
     try {
         const listName = await List.findOne({ name: submitListName });
     
-        if (listName === null) {
-            await item.save();
-            console.log("newItem added to mainlist");
-            return "";
-        } else {
+        if(listName){
             listName.items.push(item);
             console.log("newItem added to customList");
             await listName.save();
             return submitListName;
+        }else{
+            await item.save();
+            console.log("newItem added to mainlist");
+            return "";
         }
         } catch (err) {
-        console.log(err);
-    }
-    
-
+            console.log(err);
+        }
 }
 
 function exitMongoose(){
@@ -139,29 +137,29 @@ app.get("/", function(req,res){
     
 });
 
-app.get("/:customListName", function(req,res){
+app.get("/:customListName", async function(req,res){
     const customList = _.capitalize(req.params.customListName)
     //createList(req.params.customListName,res)
-    List.findOne({name:customList})
-    .then((listName) => {
-        if (listName === null){
+    if (customList != "Favicon.ico") {
+        try {
+          const listName = await List.findOne({ name: customList });
+          if (listName === null) {
             const newlist = new List({
-                name: customList,
-                items: defaultArray
+              name: customList,
+              items: defaultArray
             })
-            newlist.save();
+            await newlist.save();
             console.log("new List created")
             res.redirect('/' + customList)
+          } else {
+            res.render('list', { listTitle: listName.name, list: listName.items });
+          }
+        } catch (err) {
+          console.log(err)
         }
-        else{
-            
-            res.render('list',{listTitle:listName.name,list:listName.items});
-        }
-    })
-    .catch((err) => {
-        console.log(err)
-    })
-    
+      } else {
+        res.redirect('/')
+      }
 });
 
 
