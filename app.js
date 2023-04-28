@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const date = require(__dirname + "/date.js")
 const mongoose = require("mongoose")
+const _ = require("lodash")
 
 const app = express();
 
@@ -25,12 +26,31 @@ const itemsSchema = ({
 
 const Item = mongoose.model("Item", itemsSchema);
 
-function createEntry(itemName){
+async function createEntry(itemName,submitListName){
+    console.log(itemName);
+    console.log(submitListName);
+
     const item = new Item({
-        name: itemName,
+        name: itemName
     });
+    try {
+        const listName = await List.findOne({ name: submitListName });
     
-    item.save();
+        if (listName === null) {
+            await item.save();
+            console.log("newItem added to mainlist");
+            return "";
+        } else {
+            listName.items.push(item);
+            console.log("newItem added to customList");
+            await listName.save();
+            return submitListName;
+        }
+        } catch (err) {
+        console.log(err);
+    }
+    
+
 }
 
 function exitMongoose(){
@@ -55,6 +75,45 @@ const item3 = new Item({
 const defaultArray = [item1,item2,item3]
 
 
+// This is creating a new schema for custom lists
+
+const listSchema = {
+    name: String,
+    items: [itemsSchema]
+};
+
+const List = mongoose.model("List", listSchema);
+
+function createList(listName,res){
+    List.find({name:listName})
+    .then(listsName => {
+        if (listsName.length === 0){
+            const newlist = new List({
+                name: listName,
+                items: defaultArray
+            })
+            newlist.save();
+            console.log("new List created")
+            res.redirect('/')
+        }
+        else{
+                res.render('list',{listTitle:listName.name,list:listName.items});
+        }
+    })
+    .catch((err) => {
+        console.log(err)
+        
+        
+    })
+    
+    
+    
+}
+
+function exitMongoose(){
+    mongoose.connection.close()
+}
+
 // EJS and application section
 
 app.get("/", function(req,res){
@@ -73,30 +132,54 @@ app.get("/", function(req,res){
         }else {
             res.render('list',{listTitle:date.getDate(),list:items});
         }
-
-        
     })
     .catch(err => {
         console.log(err)
     })
     
-
 });
 
 app.get("/:customListName", function(req,res){
-    console.log(req.params.customListName)
+    const customList = _.capitalize(req.params.customListName)
+    //createList(req.params.customListName,res)
+    List.findOne({name:customList})
+    .then((listName) => {
+        if (listName === null){
+            const newlist = new List({
+                name: customList,
+                items: defaultArray
+            })
+            newlist.save();
+            console.log("new List created")
+            res.redirect('/' + customList)
+        }
+        else{
+            
+            res.render('list',{listTitle:listName.name,list:listName.items});
+        }
+    })
+    .catch((err) => {
+        console.log(err)
+    })
+    
 });
 
 
-app.post("/", function(req, res){
-    createEntry(req.body.toDoList)
-    res.redirect("/");
+app.post("/", async function(req, res){
+    const redirectName = await createEntry(req.body.toDoList,req.body.list)
+    console.log(redirectName)
+    
+    res.redirect("/" + redirectName);
 
 });
 
 app.post("/delete", function(req,res){
     console.log(req.body.checkBox)
-    Item.findByIdAndRemove(req.body.checkBox)
+    console.log(req.body.listName)
+    List.findOne({name:req.body.listName})
+    .then(listName => {
+        if(listName === null){
+            Item.findByIdAndRemove(req.body.checkBox)
         .then(() => {
             console.log("delete successful")
             res.redirect('/')
@@ -105,7 +188,12 @@ app.post("/delete", function(req,res){
             console.log(err)
             res.redirect('/')
         });
-    
+        }else{
+            listName.items.splice(listName.items.indexOf(req.body.checkBox));
+            listName.save()
+            res.redirect('/' + listName.name)
+        }
+    })
 });
 
 app.get("/about",function(req,res){
