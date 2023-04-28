@@ -55,15 +55,9 @@ const item3 = new Item({
 const defaultArray = [item1,item2,item3]
 
 
-
-
-
 // EJS and application section
 
 app.get("/", function(req,res){
-    
-
-    
     
     Item.find()
     .then(items => {
@@ -89,21 +83,37 @@ app.get("/", function(req,res){
 
 });
 
-// app.get("/work",function(req,res){
-
-//     res.render('list',{listTitle:"Work List",list:workList});
-// });
-
-app.get("/about",function(req,res){
-
-    res.render('about');
+app.get("/:customListName", function(req,res){
+    console.log(req.params.customListName)
 });
+
 
 app.post("/", function(req, res){
     createEntry(req.body.toDoList)
     res.redirect("/");
 
 });
+
+app.post("/delete", function(req,res){
+    console.log(req.body.checkBox)
+    Item.findByIdAndRemove(req.body.checkBox)
+        .then(() => {
+            console.log("delete successful")
+            res.redirect('/')
+        })
+        .catch((err) => {
+            console.log(err)
+            res.redirect('/')
+        });
+    
+});
+
+app.get("/about",function(req,res){
+
+    res.render('about');
+});
+
+
 
 // app.post("/work", function(req, res){
 //     workList.push(req.body.toDoList);
