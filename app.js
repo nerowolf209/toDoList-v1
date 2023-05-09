@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const date = require(__dirname + "/date.js")
 const mongoose = require("mongoose")
 const _ = require("lodash")
+require('dotenv').config({path: __dirname + '/.env'})
 
 const app = express();
 
@@ -13,11 +14,15 @@ app.use(express.static('public'));
 app.set('view engine','ejs');
 
 dbName = "toDoListDB"
-
+const dbPassword = process.env.DB_PASSWORD;
+const dbUser = process.env.DB_USER;
+const uri = "mongodb+srv://"+dbUser+":"+dbPassword+"@todolistcluster.wbzvvrw.mongodb.net/?retryWrites=true&w=majority/"
 
 // Mongoose section //
+// Local host
+//mongoose.connect('mongodb://127.0.0.1:27017/'+ dbName);
 
-mongoose.connect('mongodb://127.0.0.1:27017/'+ dbName);
+mongoose.connect(uri + dbName);
 
 const itemsSchema = ({
     name: String
