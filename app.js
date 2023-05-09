@@ -18,11 +18,23 @@ const dbPassword = process.env.DB_PASSWORD;
 const dbUser = process.env.DB_USER;
 const uri = "mongodb+srv://"+dbUser+":"+dbPassword+"@todolistcluster.wbzvvrw.mongodb.net/?retryWrites=true&w=majority/"
 
+const client = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    w: 'majority',
+    wtimeoutMS: 1000,
+    retryWrites: true,
+    dbName: 'toDoListDB'
+  };
+
+
+
+
 // Mongoose section //
 // Local host
 //mongoose.connect('mongodb://127.0.0.1:27017/'+ dbName);
 
-mongoose.connect(uri + dbName);
+mongoose.connect(uri + dbName,client);
 
 const itemsSchema = ({
     name: String
@@ -31,7 +43,7 @@ const itemsSchema = ({
 
 const Item = mongoose.model("Item", itemsSchema);
 
-async function createEntry(itemName,submitListName){
+async function createEntry(itemName,submitListName=""){
     console.log(itemName);
     console.log(submitListName);
 
