@@ -33,7 +33,14 @@ const client = {
 // Local host
 //mongoose.connect('mongodb://127.0.0.1:27017/'+ dbName);
 
-mongoose.connect(uri,client);
+mongoose.connect(uri,client)
+  .then(() => {
+    console.log("mongoDB connected successfully");
+    client.connect();
+  })
+  .catch((err) => {
+    console.log("Error while connecting", err);
+  })
 
 const itemsSchema = ({
     name: String
