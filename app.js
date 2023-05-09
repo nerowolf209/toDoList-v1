@@ -36,7 +36,6 @@ const client = {
 mongoose.connect(uri,client)
   .then(() => {
     console.log("mongoDB connected successfully");
-    client.connect();
   })
   .catch((err) => {
     console.log("Error while connecting", err);
