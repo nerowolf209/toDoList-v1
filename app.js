@@ -16,7 +16,7 @@ app.set('view engine','ejs');
 dbName = "toDoListDB"
 const dbPassword = process.env.DB_PASSWORD;
 const dbUser = process.env.DB_USER;
-const uri = "mongodb+srv://${dbUser}:${dbPassword}@todolistcluster.wbzvvrw.mongodb.net/?retryWrites=true&w=majority/"
+const uri = "mongodb+srv://"+dbUser+":"+dbPassword+"@todolistcluster.wbzvvrw.mongodb.net/"+dbName+"?retryWrites=true&w=majority"
 
 const client = {
     useNewUrlParser: true,
@@ -24,7 +24,6 @@ const client = {
     w: 'majority',
     wtimeoutMS: 1000,
     retryWrites: true,
-    dbName: dbName
   };
 
 
