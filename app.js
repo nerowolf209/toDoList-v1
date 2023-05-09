@@ -22,7 +22,7 @@ const client = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     w: 'majority',
-    wtimeoutMS: 1000,
+    wtimeoutMS: 10000,
     retryWrites: true,
   };
 
